@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 Burnout Recovery Readiness Index — NSAG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Syne:wght@500;600;700&family=Manrope:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nsag: #4D45A8;
+    --nsag-light: #E8E5F5;
+    --m8: #DF7B58;
+    --m8-light: #FBF0EB;
+    --cream: #F6F3EC;
+    --ink: #1C1B1F;
+    --ink-mid: #4A4656;
+    --ink-soft: #8A8497;
+    --white: #FFFFFF;
+    --pioneering: #2E5A28;
+    --emerging: #1B7A68;
+    --developing: #B8842A;
+    --early: #C24A2E;
+    --border: rgba(77,69,168,0.12);
+    --shadow: 0 2px 24px rgba(28,27,31,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* PROGRESS BAR */
+  .progress-rail {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--nsag-light);
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--m8);
+    transition: width 0.4s ease;
+  }
+
+  /* HEADER */
+  header {
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    color: var(--nsag);
+    text-transform: uppercase;
+  }
+  .module-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--m8);
+    background: var(--m8-light);
+    padding: 4px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* SCREENS */
+  .screen {
+    display: none;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    min-height: calc(100vh - 61px);
+  }
+  .screen.active { display: flex; }
+
+  /* WELCOME SCREEN */
+  .welcome-card {
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+  }
+  .welcome-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--m8);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 52px);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .welcome-title em {
+    font-style: italic;
+    color: var(--nsag);
+  }
+  .welcome-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-mid);
+    margin-bottom: 12px;
+  }
+  .welcome-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 40px;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--nsag);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    padding: 14px 36px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    border-radius: 2px;
+  }
+  .btn-primary:hover { background: #3D3698; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .disclaimer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  /* QUESTION SCREEN */
+  .question-wrap {
+    max-width: 680px;
+    width: 100%;
+  }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .q-dimension {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--m8);
+    text-transform: uppercase;
+  }
+  .q-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .q-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 2.5vw, 22px);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 32px;
+    padding-left: 16px;
+    border-left: 3px solid var(--m8);
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .option {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-mid);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    text-align: left;
+  }
+  .option:hover {
+    border-color: var(--nsag);
+    color: var(--ink);
+    background: var(--nsag-light);
+  }
+  .option.selected {
+    border-color: var(--nsag);
+    background: var(--nsag-light);
+    color: var(--nsag);
+    font-weight: 600;
+  }
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn-back {
+    background: none;
+    border: none;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 10px 0;
+    transition: color 0.2s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .btn-next {
+    background: var(--nsag);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 28px;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-next:not(:disabled):hover { background: #3D3698; }
+
+  /* CALCULATING SCREEN */
+  .calculating-wrap {
+    text-align: center;
+    max-width: 480px;
+  }
+  .calc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .calc-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 600;
+    color: var(--nsag);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .calc-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--nsag-light);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .calc-fill {
+    height: 100%;
+    background: var(--m8);
+    width: 0;
+    transition: width 2s ease;
+  }
+
+  /* RESULT SCREEN */
+  .result-wrap {
+    max-width: 680px;
+    width: 100%;
+  }
+  .result-header {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .tier-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 80px);
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .tier-name.revealed { opacity: 1; transform: translateY(0); }
+  .tier-name.pioneering { color: var(--pioneering); }
+  .tier-name.emerging { color: var(--emerging); }
+  .tier-name.developing { color: var(--developing); }
+  .tier-name.early { color: var(--early); }
+
+  .tier-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-mid);
+    max-width: 520px;
+  }
+
+  /* GATE */
+  .gate-section {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .gate-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .gate-desc {
+    font-size: 14px;
+    color: var(--ink-mid);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .gate-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .gate-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .gate-input:focus { border-color: var(--nsag); }
+  .btn-gate {
+    background: var(--m8);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-gate:hover { background: #C96844; }
+
+  /* DIMENSIONS BREAKDOWN */
+  .dimensions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .dimension-row {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+  }
+  .dim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .dim-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .dim-tier {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .dim-tier.pioneering { background: #E8F5E6; color: var(--pioneering); }
+  .dim-tier.emerging { background: #E4F3F0; color: var(--emerging); }
+  .dim-tier.developing { background: #FBF3E4; color: var(--developing); }
+  .dim-tier.early { background: #FBE9E6; color: var(--early); }
+
+  .dim-bar-rail {
+    height: 4px;
+    background: var(--nsag-light);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .dim-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+  .dim-finding {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+
+  .blurred { filter: blur(6px); pointer-events: none; user-select: none; }
+
+  /* CTA */
+  .cta-section {
+    margin-top: 32px;
+    padding: 28px 32px;
+    background: var(--nsag);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .cta-text {
+    color: var(--white);
+  }
+  .cta-text strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .cta-text span {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+  .btn-cta {
+    background: var(--white);
+    color: var(--nsag);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .btn-cta:hover { opacity: 0.9; }
+
+  .success-msg {
+    display: none;
+    background: #E8F5E6;
+    border: 1px solid var(--pioneering);
+    border-radius: 4px;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--pioneering);
+    margin-top: 12px;
+  }
+
+  footer {
+    padding: 20px 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .footer-link {
+    font-size: 12px;
+    color: var(--nsag);
+    text-decoration: none;
+  }
+  .footer-link:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    .screen { padding: 32px 16px; }
+    .gate-form { flex-direction: column; }
+    .cta-section { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+
+<header>
+  <div class="logo">NSAG</div>
+  <div class="module-badge">M8 · Burnout Recovery</div>
+</header>
+
+<!-- WELCOME -->
+<div class="screen active" id="screenWelcome">
+  <div class="welcome-card">
+    <div class="welcome-eyebrow">Neurocognitive Systems Advisory Group</div>
+    <h1 class="welcome-title">Burnout Recovery<br><em>Readiness Index</em></h1>
+    <p class="welcome-desc">Burnout is an organizational design failure — not an individual one. This assessment measures your organization's structural readiness to prevent, identify, and address burnout across six critical dimensions.</p>
+    <p class="welcome-meta">15 questions · 8 minutes · No account required</p>
+    <button class="btn-primary" onclick="startAssessment()">Begin Assessment</button>
+    <p class="disclaimer">Results are confidential. Your overall tier is shown immediately at no cost. Full dimension-by-dimension breakdown delivered by email.</p>
+  </div>
+</div>
+
+<!-- QUESTIONS -->
+<div class="screen" id="screenQuestion">
+  <div class="question-wrap">
+    <div class="q-meta">
+      <span class="q-dimension" id="qDimension"></span>
+      <span class="q-counter" id="qCounter"></span>
+    </div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="qOptions"></div>
+    <div class="q-nav">
+      <button class="btn-back" id="btnBack" onclick="prevQuestion()">← Back</button>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()" disabled>Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATING -->
+<div class="screen" id="screenCalculating">
+  <div class="calculating-wrap">
+    <div class="calc-label">Calculating your score</div>
+    <div class="calc-number" id="calcNumber">0</div>
+    <div class="calc-bar"><div class="calc-fill" id="calcFill"></div></div>
+    <div class="calc-label" id="calcStatus">Analyzing workload distribution...</div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="screenResult">
+  <div class="result-wrap">
+    <div class="result-header">
+      <div class="result-eyebrow">Your organization is</div>
+      <div class="tier-name" id="tierName"></div>
+      <p class="tier-desc" id="tierDesc"></p>
+    </div>
+
+    <div class="gate-section" id="gateSection">
+      <div class="gate-title">See your full dimension-by-dimension breakdown</div>
+      <div class="gate-desc">Your complete report shows where you score on each of the six burnout recovery dimensions — with specific findings and recommended next steps for your tier.</div>
+      <div class="gate-form">
+        <input type="email" class="gate-input" id="gateEmail" placeholder="Work email address" />
+        <input type="text" class="gate-input" id="gateOrg" placeholder="Organization name" />
+        <button class="btn-gate" onclick="submitGate()">Send My Report</button>
+      </div>
+      <div class="success-msg" id="gateSuccess">Received. We'll follow up within 24 hours with your full dimension report.</div>
+    </div>
+
+    <div class="dimensions blurred" id="dimensionsSection"></div>
+
+    <div class="cta-section">
+      <div class="cta-text">
+        <strong>Ready to move up a tier?</strong>
+        <span>NSAG M8 advisory — from $8,500 for a 90-day engagement.</span>
+      </div>
+      <button class="btn-cta" onclick="window.location.href='mailto:collins.ra@northeastern.edu?subject=NSAG M8 Advisory Inquiry'">Talk to an Advisor</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-text">© 2026 RN Collins LLC · Aloha AI Consulting · NSAG Framework</span>
+  <a href="mailto:collins.ra@northeastern.edu" onclick="navigator.clipboard.writeText('collins.ra@northeastern.edu')" class="footer-link">Contact the Architect</a>
+</footer>
+
+<script>
+const QUESTIONS = [
+  {
+    dimension: "Workload Distribution",
+    dimKey: "workload",
+    text: "How is workload typically distributed across your team?",
+    options: [
+      { text: "Distributed equitably with clear, consistent processes", score: 3 },
+      { text: "Generally manageable, but some staff carry significantly more", score: 2 },
+      { text: "Frequently uneven with no consistent adjustment mechanism", score: 1 },
+      { text: "Chronically overwhelming — staff routinely work unsustainably", score: 0 }
+    ]
+  },
+  {
+    dimension: "Workload Distribution",
+    dimKey: "workload",
+    text: "When a team member's workload becomes unsustainable, what typically happens?",
+    options: [
+      { text: "Leadership proactively intervenes and redistributes workload", score: 3 },
+      { text: "Staff raise it and adjustments are usually made", score: 2 },
+      { text: "Staff manage it on their own — raising it is uncomfortable", score: 1 },
+      { text: "Nothing changes until someone burns out or leaves", score: 0 }
+    ]
+  },
+  {
+    dimension: "Workload Distribution",
+    dimKey: "workload",
+    text: "Does your organization track individual workload against capacity benchmarks?",
+    options: [
+      { text: "Yes — formally tracked with defined thresholds", score: 3 },
+      { text: "Informally monitored by managers", score: 2 },
+      { text: "Rarely — capacity is assumed rather than measured", score: 1 },
+      { text: "Never tracked", score: 0 }
+    ]
+  },
+  {
+    dimension: "Recovery Time",
+    dimKey: "recovery",
+    text: "Are staff able to fully use their allocated vacation and time off?",
+    options: [
+      { text: "Yes — encouraged, protected, and modeled by leadership", score: 3 },
+      { text: "Most take it, but some struggle to fully disconnect", score: 2 },
+      { text: "Often interrupted, partially taken, or postponed", score: 1 },
+      { text: "Vacation is rarely taken in full; work continues during time off", score: 0 }
+    ]
+  },
+  {
+    dimension: "Recovery Time",
+    dimKey: "recovery",
+    text: "Does your organization actively protect recovery time (e.g., no after-hours expectations, meeting-free blocks)?",
+    options: [
+      { text: "Yes — formally structured and enforced by leadership", score: 3 },
+      { text: "Informally encouraged but not consistently protected", score: 2 },
+      { text: "Stated policy exists but rarely followed in practice", score: 1 },
+      { text: "No recovery time structure exists", score: 0 }
+    ]
+  },
+  {
+    dimension: "Recovery Time",
+    dimKey: "recovery",
+    text: "How often do staff routinely work beyond their scheduled hours?",
+    options: [
+      { text: "Rarely — occasional, not an expectation", score: 3 },
+      { text: "Monthly — periodic pressure periods, not the baseline", score: 2 },
+      { text: "Weekly — extended hours are the norm for many staff", score: 1 },
+      { text: "Daily — working beyond scheduled hours is the baseline", score: 0 }
+    ]
+  },
+  {
+    dimension: "Psychological Safety",
+    dimKey: "safety",
+    text: "Can staff raise concerns about workload or wellbeing without fear of negative consequences?",
+    options: [
+      { text: "Yes — actively encouraged and consistently protected", score: 3 },
+      { text: "Usually safe, with some informal exceptions", score: 2 },
+      { text: "Risky — informal consequences are likely for some issues", score: 1 },
+      { text: "Not safe — raising concerns carries real professional risk", score: 0 }
+    ]
+  },
+  {
+    dimension: "Psychological Safety",
+    dimKey: "safety",
+    text: "When staff set limits on their availability or workload, how does leadership respond?",
+    options: [
+      { text: "Supported and respected — limits are honored", score: 3 },
+      { text: "Acknowledged but not consistently respected", score: 2 },
+      { text: "Tolerated but viewed negatively", score: 1 },
+      { text: "Limits are penalized or staff feel they cannot set them", score: 0 }
+    ]
+  },
+  {
+    dimension: "Leadership Support",
+    dimKey: "leadership",
+    text: "How consistently do leaders model sustainable work practices?",
+    options: [
+      { text: "Consistently — leaders demonstrably take breaks, leave on time, use vacation", score: 3 },
+      { text: "Sometimes — inconsistent across leaders", score: 2 },
+      { text: "Rarely — leaders typically work unsustainable hours", score: 1 },
+      { text: "Never — leaders model overwork as the organizational standard", score: 0 }
+    ]
+  },
+  {
+    dimension: "Leadership Support",
+    dimKey: "leadership",
+    text: "When a staff member shows signs of burnout, what does leadership typically do?",
+    options: [
+      { text: "Proactive intervention — workload adjusted, support offered before crisis", score: 3 },
+      { text: "Reactive — addressed after it becomes visible", score: 2 },
+      { text: "Minimal — individual counseling or EAP suggested", score: 1 },
+      { text: "Nothing — burnout is expected to be managed personally", score: 0 }
+    ]
+  },
+  {
+    dimension: "Systemic Change",
+    dimKey: "systemic",
+    text: "Does your organization have a formal process for identifying and changing the structural factors that produce burnout?",
+    options: [
+      { text: "Yes — annual assessment with changes documented and tracked", score: 3 },
+      { text: "Informally — discussed in leadership, some changes made", score: 2 },
+      { text: "Rarely — addressed only after major incidents", score: 1 },
+      { text: "No — burnout is treated entirely as an individual issue", score: 0 }
+    ]
+  },
+  {
+    dimension: "Systemic Change",
+    dimKey: "systemic",
+    text: "In the past two years, has your organization made a structural change specifically to address burnout?",
+    options: [
+      { text: "Yes — multiple meaningful structural changes implemented", score: 3 },
+      { text: "One significant change has been made", score: 2 },
+      { text: "Changes discussed and planned but not yet implemented", score: 1 },
+      { text: "No structural changes — wellness perks only, or nothing", score: 0 }
+    ]
+  },
+  {
+    dimension: "Secondary Trauma",
+    dimKey: "trauma",
+    text: "Does your organization's work involve regular exposure to trauma, violence, or high-distress content?",
+    options: [
+      { text: "Yes — most staff encounter this weekly or daily", score: -1 }, // filter: yes
+      { text: "Sometimes — some roles involve this exposure", score: -2 }, // filter: sometimes
+      { text: "Rarely — occasional exposure for some roles", score: -3 }, // filter: rarely
+      { text: "No — our work does not typically involve trauma exposure", score: -4 }  // filter: no
+    ]
+  },
+  {
+    dimension: "Secondary Trauma",
+    dimKey: "trauma",
+    text: "Does your organization have formal secondary trauma support built into standard practice?",
+    options: [
+      { text: "Yes — structured debriefs, clinical supervision, peer support built into workflow", score: 3 },
+      { text: "Available but not required — staff access it individually", score: 2 },
+      { text: "Available on request but not well-utilized or promoted", score: 1 },
+      { text: "Not available — secondary trauma is not addressed structurally", score: 0 }
+    ]
+  },
+  {
+    dimension: "Secondary Trauma",
+    dimKey: "trauma",
+    text: "Can staff access mental health support without significant cost or stigma barriers?",
+    options: [
+      { text: "Yes — fully covered, actively encouraged, destigmatized", score: 3 },
+      { text: "Available but some cost or cultural barriers exist", score: 2 },
+      { text: "Limited by cost or availability for most staff", score: 1 },
+      { text: "Not available or significantly stigmatized", score: 0 }
+    ]
+  }
+];
+
+const TIER_INFO = {
+  pioneering: {
+    label: "Pioneering",
+    cssClass: "pioneering",
+    desc: "Your organization has built a genuinely strong burnout recovery infrastructure. You have formal structures in place across multiple dimensions, and leadership is actively modeling and protecting the conditions that make sustainable work possible. The work now is to maintain these systems under pressure and continue closing the remaining gaps."
+  },
+  emerging: {
+    label: "Emerging",
+    cssClass: "emerging",
+    desc: "Your organization is building in the right direction. You have meaningful structures in place, and leadership has acknowledged burnout as an organizational issue. The gaps are specific and addressable — this is the tier where targeted interventions produce the most measurable improvement."
+  },
+  developing: {
+    label: "Developing",
+    cssClass: "developing",
+    desc: "Your organization is in early stages of burnout recovery infrastructure. Some awareness exists, and some individual supports are available, but the structural conditions that produce burnout have not yet been addressed systematically. The risk of losing experienced staff is real, and the cost of inaction is compounding."
+  },
+  early: {
+    label: "Early Stage",
+    cssClass: "early",
+    desc: "Your organization does not yet have meaningful burnout recovery infrastructure. Burnout is being treated as an individual problem, and the structural conditions that produce it remain unaddressed. The risk of turnover, error, and declining quality of service is significant. The path forward starts with assessment and a leadership conversation about structural change."
+  }
+};
+
+const DIM_FINDINGS = {
+  workload: {
+    pioneering: "Workload is distributed equitably with active monitoring and leadership intervention when thresholds are exceeded.",
+    emerging: "Workload distribution is generally manageable but lacks consistent mechanisms for adjustment when imbalances appear.",
+    developing: "Workload imbalances are frequent and the adjustment process is informal at best. Staff are absorbing excess without systemic relief.",
+    early: "Workload distribution is a primary burnout driver in your organization. Chronic overload with no adjustment mechanism is not sustainable."
+  },
+  recovery: {
+    pioneering: "Recovery time is formally protected and modeled by leadership. Staff can genuinely disconnect.",
+    emerging: "Recovery time policies exist but are not consistently enforced. Some staff struggle to fully disconnect.",
+    developing: "Recovery time is frequently interrupted or not fully taken. Work expectations bleed into personal time.",
+    early: "Recovery time infrastructure does not meaningfully exist. Staff cannot predictably disconnect from work demands."
+  },
+  safety: {
+    pioneering: "Staff can raise concerns and set limits without professional risk. Psychological safety is actively maintained.",
+    emerging: "Generally safe to raise concerns, but exceptions exist. Limits are acknowledged more than honored.",
+    developing: "Psychological safety is inconsistent. Staff weigh the cost of raising concerns before doing so.",
+    early: "Psychological safety is low or absent. Staff cannot reliably raise concerns or set limits without consequences."
+  },
+  leadership: {
+    pioneering: "Leadership consistently models sustainable practice and responds proactively to burnout signals.",
+    emerging: "Leadership modeling is inconsistent across levels. Response to burnout is reactive rather than preventive.",
+    developing: "Leaders are not modeling sustainable practice. Burnout is addressed minimally, often through individual counseling only.",
+    early: "Leadership is modeling overwork as the organizational standard and responding to burnout with no structural intervention."
+  },
+  systemic: {
+    pioneering: "Systemic change capacity is active — burnout is regularly assessed and structural changes are implemented and tracked.",
+    emerging: "Some systemic change has occurred, but the process is informal and inconsistent.",
+    developing: "Systemic change is discussed but rarely implemented. The organization is still primarily treating burnout individually.",
+    early: "No systemic change capacity exists. Burnout is entirely individualized with no structural response."
+  },
+  trauma: {
+    pioneering: "Secondary trauma support is built into standard practice, well-resourced, and destigmatized.",
+    emerging: "Secondary trauma support is available but not consistently accessed. Some barriers remain.",
+    developing: "Secondary trauma support is limited and access barriers are significant.",
+    early: "Secondary trauma is not addressed structurally. Staff in high-exposure roles are carrying this without organizational support.",
+    na: "Secondary trauma exposure is minimal in your organization's work. This dimension does not represent a primary risk area."
+  }
+};
+
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let traumaExposure = 'yes'; // default
+let scores = {};
+
+function startAssessment() {
+  document.getElementById('screenWelcome').classList.remove('active');
+  document.getElementById('screenQuestion').classList.add('active');
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  const q = QUESTIONS[idx];
+  document.getElementById('qDimension').textContent = q.dimension;
+  document.getElementById('qCounter').textContent = `${idx + 1} of ${QUESTIONS.length}`;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('btnBack').style.visibility = idx === 0 ? 'hidden' : 'visible';
+
+  const optDiv = document.getElementById('qOptions');
+  optDiv.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[idx] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(idx, i, btn);
+    optDiv.appendChild(btn);
+  });
+
+  const progress = ((idx) / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('btnNext').disabled = answers[idx] === null;
+  currentQ = idx;
+}
+
+function selectOption(qIdx, optIdx, btn) {
+  answers[qIdx] = optIdx;
+  document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQuestion() {
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion(currentQ);
+  } else {
+    showCalculating();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion(currentQ);
+  }
+}
+
+function showCalculating() {
+  document.getElementById('screenQuestion').classList.remove('active');
+  document.getElementById('screenCalculating').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+
+  const phases = [
+    "Analyzing workload distribution...",
+    "Reviewing recovery time infrastructure...",
+    "Assessing psychological safety...",
+    "Evaluating leadership support...",
+    "Measuring systemic change capacity...",
+    "Reviewing secondary trauma protocols...",
+    "Generating your report..."
+  ];
+  let phase = 0;
+  const phaseInterval = setInterval(() => {
+    if (phase < phases.length) {
+      document.getElementById('calcStatus').textContent = phases[phase];
+      phase++;
+    } else {
+      clearInterval(phaseInterval);
+    }
+  }, 400);
+
+  // Animate number
+  const finalScore = calculateScores();
+  let count = 0;
+  const countInterval = setInterval(() => {
+    count = Math.min(count + 2, finalScore.overall);
+    document.getElementById('calcNumber').textContent = count;
+    if (count >= finalScore.overall) clearInterval(countInterval);
+  }, 30);
+
+  document.getElementById('calcFill').style.width = finalScore.overall + '%';
+
+  setTimeout(() => {
+    clearInterval(phaseInterval);
+    showResults(finalScore);
+  }, 3000);
+}
+
+function calculateScores() {
+  const dimRaw = { workload: 0, recovery: 0, safety: 0, leadership: 0, systemic: 0, trauma: 0 };
+  const dimMax = { workload: 9, recovery: 9, safety: 6, leadership: 6, systemic: 6, trauma: 9 };
+
+  // Handle trauma exposure filter (Q12, index 12)
+  const traumaFilterScore = QUESTIONS[12].options[answers[12]].score;
+  if (traumaFilterScore === -4) {
+    traumaExposure = 'no';
+    dimRaw.trauma = 9; // N/A = full score
+  } else {
+    traumaExposure = traumaFilterScore === -1 ? 'yes' : traumaFilterScore === -2 ? 'sometimes' : 'rarely';
+    dimRaw.trauma += QUESTIONS[13].options[answers[13]].score;
+    dimRaw.trauma += QUESTIONS[14].options[answers[14]].score;
+    // Scale: 2 questions max 6, normalize to 9
+    dimRaw.trauma = Math.round((dimRaw.trauma / 6) * 9);
+  }
+
+  // Q0-2: workload
+  for (let i = 0; i < 3; i++) dimRaw.workload += QUESTIONS[i].options[answers[i]].score;
+  // Q3-5: recovery
+  for (let i = 3; i < 6; i++) dimRaw.recovery += QUESTIONS[i].options[answers[i]].score;
+  // Q6-7: safety
+  for (let i = 6; i < 8; i++) dimRaw.safety += QUESTIONS[i].options[answers[i]].score;
+  // Q8-9: leadership
+  for (let i = 8; i < 10; i++) dimRaw.leadership += QUESTIONS[i].options[answers[i]].score;
+  // Q10-11: systemic
+  for (let i = 10; i < 12; i++) dimRaw.systemic += QUESTIONS[i].options[answers[i]].score;
+
+  const dimNorm = {};
+  Object.keys(dimRaw).forEach(k => {
+    dimNorm[k] = Math.round((dimRaw[k] / dimMax[k]) * 100);
+  });
+
+  const overall = Math.round(Object.values(dimNorm).reduce((a, b) => a + b, 0) / 6);
+  scores = dimNorm;
+
+  return { overall, dimensions: dimNorm };
+}
+
+function getTier(score) {
+  if (score >= 80) return 'pioneering';
+  if (score >= 60) return 'emerging';
+  if (score >= 40) return 'developing';
+  return 'early';
+}
+
+function showResults(finalScore) {
+  document.getElementById('screenCalculating').classList.remove('active');
+  document.getElementById('screenResult').classList.add('active');
+
+  const tier = getTier(finalScore.overall);
+  const info = TIER_INFO[tier];
+
+  const tierEl = document.getElementById('tierName');
+  tierEl.textContent = info.label;
+  tierEl.className = 'tier-name ' + info.cssClass;
+  setTimeout(() => tierEl.classList.add('revealed'), 100);
+
+  document.getElementById('tierDesc').textContent = info.desc;
+
+  renderDimensions(finalScore.dimensions);
+}
+
+function renderDimensions(dimNorm) {
+  const dims = [
+    { key: 'workload', label: 'Workload Distribution' },
+    { key: 'recovery', label: 'Recovery Time Infrastructure' },
+    { key: 'safety', label: 'Psychological Safety' },
+    { key: 'leadership', label: 'Leadership Support' },
+    { key: 'systemic', label: 'Systemic Change Capacity' },
+    { key: 'trauma', label: 'Secondary Trauma Support' }
+  ];
+
+  const colors = { pioneering: '#2E5A28', emerging: '#1B7A68', developing: '#B8842A', early: '#C24A2E' };
+
+  const container = document.getElementById('dimensionsSection');
+  container.innerHTML = '';
+  dims.forEach(d => {
+    const score = dimNorm[d.key];
+    const tier = d.key === 'trauma' && traumaExposure === 'no' ? 'pioneering' : getTier(score);
+    const finding = DIM_FINDINGS[d.key][tier === 'early' ? 'early' : tier];
+
+    container.innerHTML += `
+      <div class="dimension-row">
+        <div class="dim-header">
+          <span class="dim-name">${d.label}</span>
+          <span class="dim-tier ${tier}">${tier === 'early' ? 'Early Stage' : tier.charAt(0).toUpperCase() + tier.slice(1)}</span>
+        </div>
+        <div class="dim-bar-rail">
+          <div class="dim-bar-fill" style="width:${score}%;background:${colors[tier]}"></div>
+        </div>
+        <p class="dim-finding">${d.key === 'trauma' && traumaExposure === 'no' ? DIM_FINDINGS.trauma.na : finding}</p>
+      </div>`;
+  });
+}
+
+function submitGate() {
+  const email = document.getElementById('gateEmail').value;
+  const org = document.getElementById('gateOrg').value;
+  if (!email || !email.includes('@')) {
+    document.getElementById('gateEmail').focus();
+    return;
+  }
+
+  // POST to nsag-api
+  fetch('https://nsag-api.vercel.app/api/lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email, org,
+      source: 'nsag-m8',
+      module: 'M8',
+      tier: getTier(Object.values(scores).reduce((a,b)=>a+b,0)/6),
+      scores,
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => {}); // silent fail until API is live
+
+  document.getElementById('gateSuccess').style.display = 'block';
+  document.getElementById('dimensionsSection').classList.remove('blurred');
+  document.getElementById('gateSection').style.opacity = '0.5';
+  document.getElementById('gateSection').style.pointerEvents = 'none';
+}
+</script>
+</body>
+</html>
