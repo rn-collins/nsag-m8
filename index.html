@@ -349,9 +349,24 @@ body{font-family:'Manrope',sans-serif;background:#F6F3EC!important;color:#1C1B1F
 </div>
 
 <script>
-const GUMROAD = 'https://gumroad.com/nsag';
 const BOOK = 'https://outlook.office.com/bookwithme/user/3ff7c8299177431a8fc2b099238c5e43@northeastern.edu?anonymous&ismsaljsauthenabled&ep=plink';
 const API   = 'https://nsag-api.vercel.app/api/lead';
+
+function requestToolkit(btn, moduleTag) {
+  try {
+    var emailEl = document.getElementById('gate-email');
+    var email = (emailEl && emailEl.value) ? emailEl.value.trim() : '';
+    fetch(API, {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email: email, source: 'toolkit-waitlist-' + moduleTag,
+        message: 'Requested to purchase the ' + moduleTag + ' Governance Toolkit (waitlist — not yet available for checkout)',
+        timestamp: new Date().toISOString()})
+    }).catch(function(){});
+  } catch (e) {}
+  btn.disabled = true;
+  btn.style.cursor = 'default';
+  btn.style.opacity = '0.85';
+  btn.textContent = "You're on the list — I'll email you personally, usually within a day.";
+}
 const DIM_NAMES = ['Workload Distribution','Autonomy & Control','Reward & Recognition','Community & Support','Fairness & Equity','Values Alignment'];
 
 const QUESTIONS = [
@@ -681,7 +696,7 @@ function revealResults() {
     rec = 'Your organization has real burnout-governance practices, but they are not yet systemic. Most institutions at this tier reach PIONEERING within one advisory cycle focused on the lowest-scoring Maslach domains.';
     bridgeLabel = 'What to do with an EMERGING result';
     bridgeText = 'You have governance in place. The gap to PIONEERING is in domains that are partially built, where practice exists but policy does not. The M8 Governance Toolkit contains specific policy language for each gap and a 90-day roadmap for institutions at your exact tier.';
-    bridgeBtns = '<a href="' + GUMROAD + '" target="_blank" class="bridge-btn-primary" style="background:#4D45A8">Get the M8 Governance Toolkit — $500</a>'
+    bridgeBtns = '<button type="button" onclick="requestToolkit(this,\'M8\')" class="bridge-btn-primary" style="background:#4D45A8;border:none;cursor:pointer;font:inherit">Join the M8 Toolkit Waitlist — $500</button>'
               + '<a href="' + BOOK + '" class="bridge-btn-secondary" style="border:1.5px solid #4D45A8;color:#4D45A8">Book a Discovery Call</a>';
     crossModule = 'Your lowest domain, ' + DIM_NAMES[minDim] + ', is where a focused cycle will move you fastest. If staff strain is compounded by the physical environment, the M10 Challenge addresses it.';
   } else if (avg >= 1.5) {
@@ -689,7 +704,7 @@ function revealResults() {
     rec = 'Your organization is meeting baseline expectations without yet designing against the six drivers of burnout. Governance exists in some domains but depends on individual managers rather than policy. When they leave, the governance leaves with them.';
     bridgeLabel = 'What to do with a DEVELOPING result';
     bridgeText = 'Your practices work — right now they live in the people who carry them. Writing them into policy is what makes them hold when those people move on. The M8 Governance Toolkit contains policy language for all six Maslach domains, a 90-day action plan built for DEVELOPING institutions, and the measurement framework for proving progress to leadership.';
-    bridgeBtns = '<a href="' + GUMROAD + '" target="_blank" class="bridge-btn-primary" style="background:#956B18">Get the M8 Governance Toolkit — $500</a>'
+    bridgeBtns = '<button type="button" onclick="requestToolkit(this,\'M8\')" class="bridge-btn-primary" style="background:#956B18;border:none;cursor:pointer;font:inherit">Join the M8 Toolkit Waitlist — $500</button>'
               + '<a href="' + BOOK + '" class="bridge-btn-secondary" style="border:1.5px solid #956B18;color:#956B18">Book a Discovery Call</a>';
     pioneeringExample = 'What PIONEERING looks like in practice: A hospital system set a measured workload ceiling with automatic scope review, a penalty-free help-seeking pathway, and a values-conflict escalation channel. Within a year, turnover in the pilot units fell and staff-reported exhaustion dropped measurably.';
     crossModule = 'Your ' + DIM_NAMES[minDim] + ' gap is the highest-leverage starting point. Once burnout governance is in place, the M10 Challenge addresses the built-environment drivers of staff strain.';
@@ -698,7 +713,7 @@ function revealResults() {
     rec = 'Your institution\'s response to documented burnout is structurally unable to reach its causes: the demands, the missing control, the absent recognition and support. This is a design problem with a design solution. The fastest path forward is one concrete governance change this week.';
     bridgeLabel = 'What to do with an EARLY STAGE result';
     bridgeText = 'Most institutions begin here. The fastest path out is one concrete action this week and a governance document in your hands. The M8 Governance Toolkit gives you a 90-day roadmap, specific policy language, and measurement criteria to prove progress to leadership.';
-    bridgeBtns = '<a href="' + GUMROAD + '" target="_blank" class="bridge-btn-primary" style="background:#6B2937">Get the M8 Governance Toolkit — $500</a>'
+    bridgeBtns = '<button type="button" onclick="requestToolkit(this,\'M8\')" class="bridge-btn-primary" style="background:#6B2937;border:none;cursor:pointer;font:inherit">Join the M8 Toolkit Waitlist — $500</button>'
               + '<a href="' + BOOK + '" class="bridge-btn-secondary" style="border:1.5px solid #6B2937;color:#6B2937">Book a Discovery Call</a>';
     pioneeringExample = 'What PIONEERING looks like from here: A clinic started with one change, a real and penalty-free way to flag unsustainable load. Six months later they had added a values-conflict channel and a workload ceiling. Most PIONEERING institutions were EARLY STAGE two to three years ago.';
     crossModule = 'Start with M8. Burnout governance is the foundation the other modules depend on: when staff are depleted, no other governance holds.';
