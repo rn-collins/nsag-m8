@@ -1,6 +1,6 @@
-# NSAG M8 — Accessibility
+# NSAG M8 — Burnout Recovery Infrastructure
 
-Retired NSAG prototype module covering Accessibility.
+Retired standalone deployment of NSAG module M8, Burnout Recovery Infrastructure (Healthcare & Clinical). The module's canonical page is https://nsag-site.vercel.app/m8.
 
 **Live:** https://nsag-m8.vercel.app
 
@@ -10,7 +10,7 @@ This prototype has been retired. The deployment remains online as a record; it i
 
 ## Repository contents
 
-`index.html`, `vercel.json`
+`index.html`, `vercel.json`, `og.png`, `favicon.svg`, `apple-touch-icon.png`
 
 ## Local development
 
